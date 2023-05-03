@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+  swarch2023i_proxy:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: swarch2023i_proxy
+    ports:
+      - "80:80"

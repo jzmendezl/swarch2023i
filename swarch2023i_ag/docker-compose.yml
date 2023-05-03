@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  swarch2023i_ag:
+    image: swarch2023i_ag
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "curl",
+          "--fail",
+          "http://localhost:5000/graphiql"
+        ]
+      interval: 7s
+      timeout: 5s
+      retries: 5

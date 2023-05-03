@@ -1,0 +1,61 @@
+version: "3.8"
+name: "swarch2023i"
+
+# Layer Architecture
+services:
+
+  #Data Layer
+  swarch2023i_db:
+    extends:
+      file: ./swarch2023i_db/docker-compose.yml
+      service: swarch2023i_db
+
+  #Data Client Layer
+  db_client:
+    extends:
+      file: ./swarch2023i_db/docker-compose.yml
+      service: db_client
+    depends_on:
+      - swarch2023i_db
+
+  #Business Layer
+  swarch2023i_ms:
+    extends:
+      file: ./swarch2023i_ms/docker-compose.yml
+      service: swarch2023i_ms
+
+    depends_on:
+      swarch2023i_db:
+        condition: service_healthy
+
+  #Integration Layer
+  swarch2023i_ag:
+    extends:
+      file: ./swarch2023i_ag/docker-compose.yml
+      service: swarch2023i_ag
+
+  #Security Layer
+  swarch2023i-ldap:
+    extends:
+      file: ./swarch2023i_ldap/docker-compose.yml
+      service: swarch2023i-ldap
+
+  #Security Client Layer
+  swarch2023i_ldapclient:
+    extends:
+      file: ./swarch2023i_ldap/docker-compose.yml
+      service: phpldapadmin
+    depends_on:
+      - swarch2023i-ldap
+
+  #Security Proxy Layer
+  swarch2023i_proxy:
+    extends:
+      file: ./swarch2023i_proxy/docker-compose.yml
+      service: swarch2023i_proxy
+    depends_on:
+      swarch2023i_ag:
+        condition: service_healthy
+
+volumes:
+  dbdata:

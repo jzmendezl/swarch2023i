@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  swarch2023i_ms:
+    image: swarch2023i_ms
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    depends_on:
+      - swarch2023i_db
+    environment:
+      - DB_HOST=host.docker.internal
+      - DB_PORT=3306
+      - DB_USER=swarch2023i
+      - DB_PASSWORD=2023
+      - DB_NAME=swarch2023i_db
+      - URL=0.0.0.0:4000

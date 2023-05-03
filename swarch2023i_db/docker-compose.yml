@@ -1,0 +1,38 @@
+version: '3.1'
+
+services:
+  swarch2023i_db:
+    image: mysql:5.7
+    container_name: swarch2023i_db
+    environment:
+      MYSQL_ROOT_PASSWORD: 123
+      MYSQL_DATABASE: swarch2023i_db
+      MYSQL_USER: swarch2023i
+      MYSQL_PASSWORD: 2023
+      DB_HOST: host.docker.internal
+    ports:
+      - 3306:3306
+    volumes:
+      - dbdata:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mysqladmin ping -h 127.0.0.1 -u${swarch2023i} -p${MYSQL_PASSWORD}"
+        ]
+      interval: 7s
+      timeout: 5s
+      retries: 5
+
+  db_client:
+    image: phpmyadmin:latest
+    container_name: db_client
+    ports:
+      - 8081:80
+    links:
+      - swarch2023i_db:db
+    depends_on:
+      - swarch2023i_db
+
+volumes:
+  dbdata:
